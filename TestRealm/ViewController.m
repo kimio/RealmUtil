@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "Products.h"
+#import "RLMObject+RealmUtil.h"
 
 @interface ViewController ()
 
@@ -16,7 +18,53 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    //print address
+    [Products showRealmAdress];
+    
+    // Add New product
+    Products *products = [Products new];
+    products.name = @"Mesa123";
+    products.code = (NSInteger)423412;
+    NSError* erro = nil;
+    [Products insert:products andError:&erro];
+    if(erro){
+        NSLog([erro localizedDescription]);
+    }
+    
+    //Select all products
+    id produtos = [Products select:&erro];
+    if(erro){
+        NSLog([erro localizedDescription]);
+    }
+    for(Products* prod in produtos){
+        NSLog([prod description]);
+    }
+    
+    //Select only one
+    produtos = [Products select:@" id=3 " andError:&erro];
+    if(erro){
+        NSLog([erro localizedDescription]);
+    }
+    for(Products* prod in produtos){
+        NSLog([prod description]);
+    }
+    
+    //Update a product
+    products = [Products new];
+    products.id = 3;
+    products.name = @"Mesa super bacana";
+    [Products update:products updateFields:@[@"name"] andError:&erro];
+    
+    //Select only one
+    produtos = [Products select:@" id=3 " andError:&erro];
+    if(erro){
+        NSLog([erro localizedDescription]);
+    }
+    for(Products* prod in produtos){
+        NSLog([prod description]);
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
